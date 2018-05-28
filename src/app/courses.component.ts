@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {BackendApiService} from "./services/backend-api.service";
 
 // decorator function
 @Component({
@@ -8,7 +9,7 @@ import { Component } from '@angular/core';
     <br>
     <ul>
       
-      <li *ngFor="let course of getCourses()">
+      <li *ngFor="let course of courses">
         {{ course }}
       </li>
       
@@ -20,14 +21,15 @@ import { Component } from '@angular/core';
 export class CoursesComponent {
 
   title = "Course Title";
-  courses = ['course 1', 'course 2', 'course 3', 'course 4'];
+  courses
 
   getTitle() {
     return this.title;
   }
 
-  getCourses() {
-    return this.courses;
+
+  constructor(service: BackendApiService){
+    this.courses = service.getCourses();
   }
 
 }
