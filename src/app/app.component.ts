@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BackendApiService } from "./services/backend-api.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+  constructor(private _dataSource: BackendApiService) { }
+
+  ngOnInit() {
+    this._dataSource.getBurnDownChartData().subscribe(res => console.log(res));
+  }
+
 }

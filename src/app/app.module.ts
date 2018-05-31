@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { CoursesComponent } from './courses.component';
 import { CourseComponent } from './course/course.component';
-import { CourseComponent } from './course/course.component';
-import {BackendApiService} from "./services/backend-api.service";
+import { BackendApiService } from "./services/backend-api.service";
+import { HttpClientModule } from "@angular/common/http";
 
 
 @NgModule({
@@ -13,7 +13,8 @@ import {BackendApiService} from "./services/backend-api.service";
     AppComponent, CoursesComponent, CourseComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [BackendApiService],
   bootstrap: [AppComponent]
