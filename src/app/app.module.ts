@@ -7,7 +7,6 @@ import { CourseComponent } from './course/course.component';
 import { BackendApiService } from "./services/backend-api.service";
 import { HttpClientModule } from "@angular/common/http";
 
-
 @NgModule({
   declarations: [
     AppComponent, CoursesComponent, CourseComponent
@@ -19,4 +18,6 @@ import { HttpClientModule } from "@angular/common/http";
   providers: [BackendApiService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
+
