@@ -1,8 +1,7 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
 import { BackendApiService } from "./services/backend-api.service";
 import { Chart } from 'chart.js';
-import {NULL_EXPR} from "@angular/compiler/src/output/output_ast";
-import {NoOutputNamedAfterStandardEventRule} from "codelyzer";
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +10,31 @@ import {NoOutputNamedAfterStandardEventRule} from "codelyzer";
 })
 
 export class AppComponent {
-  title = 'app';
   chart = [];
 
   constructor(private _dataSource: BackendApiService) { }
+
+  @ViewChild('content') content: ElementRef
+  downloadPDF() {
+
+    let doc = new jsPDF()
+
+    let specialElementHandlers = {
+      '#editor': function(element, renderer) {
+        return true
+      }
+    }
+
+    let content = this.content.nativeElement
+
+    doc.fromHTML(content.innerHTML, 15, 15, {
+      'width': 190,
+      'elementhandlers': specialElementHandlers
+    })
+
+    doc.save('content.pdf')
+
+  }
 
   daysBetween(date1: Date, date2:Date){
     // The number of milliseconds in one day
@@ -60,7 +80,7 @@ export class AppComponent {
         let itr
         for(itr=0; itr<label_steps; itr++){
           let label: Date = new Date()
-          label.setDate(minDate.getDate() + itr)
+          label.setTime(minDate.getTime() + itr * 86400000)
           label.setHours(0,0,0,0);
           labels.push(label.toLocaleDateString('en', {year: 'numeric', month:'short', day:'numeric'}))
         }
@@ -100,16 +120,54 @@ export class AppComponent {
             data: {
               labels: labels,
               datasets: [{
-                label: 'Behavior Burndown Chart',
+                label: 'Behavior Burndown Charts',
                 data: data,
                 backgroundColor:
-                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(14, 6, 255, 0.6)',
                 borderColor:
-                  'rgba(255,99,132,1)',
+                  'rgba(14, 6, 255, 1)',
                 borderWidth: 1
               }]
+            },
+
+            options: {
+              legend: {display: false},
+              title: {
+                display: true,
+                text: 'Behavior Burndown Chart',
+                fontSize: 16
+              },
+              scales: {
+                yAxes: [
+                  {
+                    scaleLabel: {
+                      display: true,
+                      labelString: 'Behaviors'
+                    }
+                  }
+                ],
+                xAxes: [
+                  {
+                    scaleLabel: {
+                      display: false,
+                      labelString: 'Date',
+                      fontSize: 16
+                    }
+                  }
+                ]
+              },
+              tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                  label: function(tooltipItems, data) {
+                    return tooltipItems.yLabel +" new behaviors";
+                  }
+                }
+              },
             }
-          })
+
+        })
         }
     );
   }
