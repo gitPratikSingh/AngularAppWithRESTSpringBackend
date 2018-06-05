@@ -1,7 +1,14 @@
-<h1>Angular</h1>
-<courses></courses>
-<div *ngIf="chart">
-  <canvas id="canvas"> {{chart}} </canvas>
-</div>
+<svg width="100%" height="500" class="mySvg" (click)="clicked($event)">
+  <text x="10" y="20">Click anywhere</text>
+</svg>
 
+<div id="content">
+  <h1>Angular</h1>
+
+  <div *ngIf="chart">
+    <canvas id="canvas"> {{chart}} </canvas>
+  </div>
+  <p> Hi this is test</p>
+  <button (click)="downloadPDF()"> Export to PDF </button>
+</div>
 
