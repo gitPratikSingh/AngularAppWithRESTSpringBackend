@@ -1,7 +1,8 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import { BackendApiService } from "./services/backend-api.service";
-import { Chart } from 'chart.js';
-import * as jsPDF from 'jspdf';
+import {Component, ViewChild, ElementRef} from '@angular/core'
+import { BackendApiService } from "./services/backend-api.service"
+import { Chart } from 'chart.js'
+import * as jsPDF from 'jspdf'
+import * as d3 from 'd3';
 
 @Component({
   selector: 'app-root',
@@ -17,22 +18,22 @@ export class AppComponent {
   @ViewChild('content') content: ElementRef
   downloadPDF() {
 
-    let doc = new jsPDF()
-
-    let specialElementHandlers = {
-      '#editor': function(element, renderer) {
-        return true
-      }
-    }
-
-    let content = this.content.nativeElement
-
-    doc.fromHTML(content.innerHTML, 15, 15, {
-      'width': 190,
-      'elementhandlers': specialElementHandlers
-    })
-
-    doc.save('content.pdf')
+    // let doc = new jsPDF()
+    //
+    // let specialElementHandlers = {
+    //   '#editor': function(element, renderer) {
+    //     return true
+    //   }
+    // }
+    //
+    // let content = this.content.nativeElement
+    //
+    // doc.fromHTML(content.innerHTML, 15, 15, {
+    //   'width': 190,
+    //   'elementhandlers': specialElementHandlers
+    // })
+    //
+    // doc.save('content.pdf')
 
   }
 
@@ -49,6 +50,36 @@ export class AppComponent {
 
     // Convert back to days and return
     return Math.round(difference_ms/ONE_DAY) + 1
+  }
+
+  chartClickEvent(event, array){
+    console.log(event)
+    console.log(array)
+
+    if (array.length > 0){
+      // get the element index
+      let dataPoint = array[0]
+
+      alert(dataPoint._model.label)
+
+    }
+
+  }
+
+  clicked(event: any){
+    d3.select(event.target)
+      .append('circle')
+      .attr('cx', event.x)
+      .attr('cy', event.y)
+      .attr('r', () => {
+        return 10
+      })
+      .attr('fill', 'red')
+
+  }
+
+  ngAfterContentInit() {
+    d3.select('p').style('color', 'red');
   }
 
   ngOnInit() {
@@ -70,7 +101,7 @@ export class AppComponent {
           })
         })
 
-        let maxDate: Date = createdAtArray[0]
+        let maxDate: Date = new Date()
         let minDate: Date = createdAtArray[createdAtArray.length-1]
 
         let label_steps:number = this.daysBetween(maxDate, minDate)
@@ -165,6 +196,7 @@ export class AppComponent {
                   }
                 }
               },
+              onClick: this.chartClickEvent
             }
 
         })
